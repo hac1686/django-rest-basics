@@ -4,15 +4,18 @@ from rest_framework.parsers import JSONParser
 from .models import Article
 from .serializers import ArticleSerializer
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 # Create your views here.
 
-@csrf_exempt
+# @csrf_exempt  -removing, no longer need this
+@api_view(['GET', 'POST'])
 def article_list(request):
 
     if request.method == 'GET':
         articles = Article.objects.all()
         serializer = ArticleSerializer(articles, many=True)
-        return JsonResponse(serializer.data, safe = False)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
